@@ -28,8 +28,15 @@ async fn main() {
     
     let state = Arc::new(AppState { store });
     
+    // Add CORS middleware
+    use tower_http::cors::{CorsLayer, Any};
+    let cors = CorsLayer::new()
+        .allow_origin(Any)
+        .allow_methods(Any)
+        .allow_headers(Any);
+    
     // Build router
-    let app = create_routes(state);
+    let app = create_routes(state).layer(cors);
     
     // Get port from environment or default
     let port = std::env::var("MEM_PORT")

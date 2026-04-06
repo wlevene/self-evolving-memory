@@ -2,6 +2,9 @@
 
 > **AI Agent Memory System** - Production-grade memory infrastructure
 
+![1.png](docs/1.png)
+![2.png](docs/2.png)
+
 🧠 一个为 AI Agent 设计的记忆系统，实现类似人类的记忆管理机制。
 
 ## 特性

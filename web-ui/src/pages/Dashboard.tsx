@@ -35,7 +35,7 @@ export function Dashboard() {
     queryKey: ['recent'],
     queryFn: async () => {
       const response = await api.get('/memories?limit=5')
-      return response.data.results
+      return response.data?.results || []
     },
   })
 
@@ -134,12 +134,15 @@ export function Dashboard() {
       {/* By Type Chart */}
       {stats?.by_type && Object.keys(stats.by_type).length > 0 && (
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Memories by Type</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {Object.entries(stats.by_type).map(([type, count]) => (
-              <div key={type} className="text-center p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-500 capitalize">{type}</p>
-                <p className="text-xl font-bold text-gray-900">{count}</p>
+          <div className="flex items-center gap-2 mb-4">
+            <Activity className="w-5 h-5 text-green-600" />
+            <h3 className="text-lg font-semibold">Distribution by Type</h3>
+          </div>
+          <div className="space-y-4">
+            {Object.keys(stats.by_type).map((type) => (
+              <div key={type} className="flex items-center justify-between">
+                <span className="text-gray-600 capitalize">{type}</span>
+                <span className="font-semibold text-gray-900">{stats.by_type[type]}</span>
               </div>
             ))}
           </div>
