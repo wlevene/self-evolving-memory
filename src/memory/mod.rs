@@ -12,5 +12,8 @@ mod postgres;
 
 // Re-export main types
 pub use types::{Memory, MemoryType, MemoryPool, MemoryLink, LinkType, CreateMemoryRequest, UpdateMemoryRequest, SearchQuery, MemoryStats};
+pub mod sqlite;
+
 pub use store::{InMemoryStore, MemoryStore};
 pub use postgres::PostgresStore;
+pub use sqlite::SqliteStore;

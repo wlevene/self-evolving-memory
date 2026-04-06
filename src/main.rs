@@ -1,7 +1,7 @@
 //! Self-Evolving Memory Service
 
 use self_evolving_memory::api::{handlers::AppState, routes::create_routes};
-use self_evolving_memory::{InMemoryStore, PostgresStore, MemoryStore};
+use self_evolving_memory::{InMemoryStore, PostgresStore, SqliteStore, MemoryStore};
 use std::sync::Arc;
 use std::net::SocketAddr;
 use dotenvy::dotenv;
@@ -16,11 +16,19 @@ async fn main() {
     
     // Create store based on DATABASE_URL
     let store: Arc<dyn MemoryStore> = if let Ok(db_url) = std::env::var("DATABASE_URL") {
-        println!("Connecting to PostgreSQL: {}", db_url);
-        let pg_store = PostgresStore::new(&db_url)
-            .await
-            .expect("Failed to connect to database");
-        Arc::new(pg_store)
+        if db_url.starts_with("sqlite:") {
+            println!("Connecting to SQLite: {}", db_url);
+            let sqlite_store = SqliteStore::new(&db_url)
+                .await
+                .expect("Failed to connect to SQLite database");
+            Arc::new(sqlite_store)
+        } else {
+            println!("Connecting to PostgreSQL: {}", db_url);
+            let pg_store = PostgresStore::new(&db_url)
+                .await
+                .expect("Failed to connect to PostgreSQL database");
+            Arc::new(pg_store)
+        }
     } else {
         println!("Using in-memory storage (no DATABASE_URL set)");
         Arc::new(InMemoryStore::new())
