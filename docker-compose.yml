@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  memory-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"  # HTTP API
+      - "4000:4000"  # MCP Server
+    environment:
+      - RUST_LOG=info
+      - MEMORY_API_PORT=3000
+      - MEMORY_MCP_PORT=4000
+    volumes:
+      - memory-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - memory-network
+
+  # Optional: PostgreSQL for persistent storage
+  memory-db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=memory
+      - POSTGRES_PASSWORD=memory_secret
+      - POSTGRES_DB=self_evolving_memory
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U memory"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - memory-network
+    profiles:
+      - postgres
+
+  # Optional: Vector extension for pgvector
+  memory-db-vector:
+    image: ankane/pgvector:v0.5.0
+    environment:
+      - POSTGRES_USER=memory
+      - POSTGRES_PASSWORD=memory_secret
+      - POSTGRES_DB=self_evolving_memory
+    volumes:
+      - postgres-vector-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U memory"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - memory-network
+    profiles:
+      - vector
+
+  # Web UI (separate for development)
+  web-ui:
+    build:
+      context: ./web-ui
+      dockerfile: Dockerfile.web
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://memory-server:3000
+    depends_on:
+      - memory-server
+    networks:
+      - memory-network
+    profiles:
+      - dev
+
+volumes:
+  memory-data:
+  postgres-data:
+  postgres-vector-data:
+
+networks:
+  memory-network:
+    driver: bridge
