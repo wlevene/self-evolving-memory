@@ -1,68 +1,68 @@
-# Self-Evolving Memory 使用文档
+# Self-Evolving Memory Usage Documentation
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 安装
+### Installation
 
 ```bash
 cd ~/workspace/self-evolving-memory
 cargo build --release
 ```
 
-### 启动服务器
+### Start the Server
 
 ```bash
-# 方式1: 使用 CLI
+# Method 1: Using CLI
 ./target/debug/mem --serve --port 3000
 
-# 方式2: 使用 cargo
+# Method 2: Using cargo
 cargo run -- --serve --port 3000
 ```
 
-服务器将在 `http://localhost:3000` 启动。
+The server will start at `http://localhost:3000`.
 
 ---
 
-## 📖 CLI 使用
+## 📖 CLI Usage
 
-### 基本命令
+### Basic Commands
 
 ```bash
-# 查看帮助
+# View help
 mem --help
 
-# 创建记忆
-mem create "用户喜欢简洁回复" --pool implicit --type preference
+# Create memory
+mem create "User likes concise replies" --pool implicit --type preference
 
-# 搜索记忆
-mem search "用户偏好" --limit 10
+# Search memory
+mem search "User preference" --limit 10
 
-# 列出所有记忆
+# List all memories
 mem list --pool explicit --limit 20
 
-# 查看单个记忆
+# Get a single memory
 mem get <uuid>
 
-# 更新记忆
+# Update memory
 mem update <uuid> --importance 0.9
 
-# 删除记忆
+# Delete memory
 mem delete <uuid>
 
-# 查看统计
+# View statistics
 mem stats
 
-# 交互模式 (REPL)
+# Interactive mode (REPL)
 mem interactive
 ```
 
-### 交互模式
+### Interactive Mode
 
 ```bash
 $ mem interactive
 mem> help
-mem> create 这是一个测试记忆
-mem> search 测试
+mem> create This is a test memory
+mem> search test
 mem> list
 mem> stats
 mem> exit
@@ -72,21 +72,21 @@ mem> exit
 
 ## 🌐 HTTP API
 
-### 基础端点
+### Base Endpoints
 
-| 方法 | 端点 | 说明 |
+| Method | Endpoint | Description |
 |------|------|------|
-| GET | /health | 健康检查 |
-| GET | /stats | 系统统计 |
+| GET | /health | Health check |
+| GET | /stats | System statistics |
 
-### 记忆操作
+### Memory Operations
 
-#### 创建记忆
+#### Create Memory
 ```bash
 curl -X POST http://localhost:3000/memories \
   -H "Content-Type: application/json" \
   -d '{
-    "content": "用户喜欢简洁回复",
+    "content": "User likes concise replies",
     "pool": "implicit",
     "type": "preference",
     "importance": 0.8,
@@ -94,36 +94,36 @@ curl -X POST http://localhost:3000/memories \
   }'
 ```
 
-#### 获取记忆
+#### Get Memory
 ```bash
 curl http://localhost:3000/memories/<uuid>
 ```
 
-#### 更新记忆
+#### Update Memory
 ```bash
 curl -X PUT http://localhost:3000/memories/<uuid> \
   -H "Content-Type: application/json" \
   -d '{"importance": 0.9}'
 ```
 
-#### 删除记忆
+#### Delete Memory
 ```bash
 curl -X DELETE http://localhost:3000/memories/<uuid>
 ```
 
-#### 列表记忆
+#### List Memories
 ```bash
 curl "http://localhost:3000/memories?pool=explicit&limit=10"
 ```
 
-#### 搜索记忆
+#### Search Memories
 ```bash
-curl "http://localhost:3000/memories/search?query=用户偏好&limit=5"
+curl "http://localhost:3000/memories/search?query=User preference&limit=5"
 ```
 
-### 链接操作
+### Link Operations
 
-#### 创建链接
+#### Create Link
 ```bash
 curl -X POST http://localhost:3000/links \
   -H "Content-Type: application/json" \
@@ -134,7 +134,7 @@ curl -X POST http://localhost:3000/links \
   }'
 ```
 
-#### 获取记忆的链接
+#### Get Memory Links
 ```bash
 curl http://localhost:3000/memories/<uuid>/links
 ```
@@ -143,51 +143,51 @@ curl http://localhost:3000/memories/<uuid>/links
 
 ## 🐍 Python SDK
 
-### 安装
+### Installation
 
 ```bash
 cd sdk/python
 pip install -e .
 ```
 
-### 使用示例
+### Usage Example
 
 ```python
 from self_evolving_memory import MemoryClient, MemoryPool, MemoryType
 
-# 创建客户端
+# Create client
 client = MemoryClient("http://localhost:3000")
 
-# 创建记忆
+# Create memory
 memory = client.create({
-    "content": "用户喜欢简洁回复",
+    "content": "User likes concise replies",
     "pool": "implicit",
     "type": "preference",
     "tags": ["communication"]
 })
 print(f"Created: {memory['id']}")
 
-# 搜索记忆
-results = client.search("用户偏好", limit=5)
+# Search memory
+results = client.search("User preference", limit=5)
 for m in results:
     print(f"- {m['content']}")
 
-# 获取统计
+# Get statistics
 stats = client.stats()
 print(f"Total memories: {stats['total_memories']}")
 
-# 创建链接
+# Create link
 client.link(source_id, target_id, "related")
 
-# 渐进式检索（需要配合 SpreadingActivation）
-# 见高级用法章节
+# Progressive retrieval (requires SpreadingActivation)
+# See Advanced Usage section
 ```
 
 ---
 
 ## 📦 TypeScript SDK
 
-### 安装
+### Installation
 
 ```bash
 cd sdk/typescript
@@ -195,55 +195,55 @@ npm install
 npm run build
 ```
 
-### 使用示例
+### Usage Example
 
 ```typescript
 import { MemoryClient, MemoryPool, MemoryType } from 'self-evolving-memory'
 
 const client = new MemoryClient('http://localhost:3000')
 
-// 创建记忆
+// Create memory
 const memory = await client.create({
-  content: '用户喜欢简洁回复',
+  content: 'User likes concise replies',
   pool: MemoryPool.Implicit,
   type: MemoryType.Preference,
   tags: ['communication']
 })
 
-// 搜索记忆
-const results = await client.search({ query: '用户偏好', limit: 5 })
+// Search memory
+const results = await client.search({ query: 'User preference', limit: 5 })
 
-// 获取统计
+// Get statistics
 const stats = await client.stats()
 
-// 创建链接
+// Create link
 await client.link(sourceId, targetId, 'related')
 ```
 
 ---
 
-## 🤖 MCP 工具
+## 🤖 MCP Tools
 
-### 工具列表
+### Tool List
 
-| 工具名 | 说明 |
+| Tool Name | Description |
 |--------|------|
-| memory_create | 创建记忆 |
-| memory_retrieve | 搜索记忆 |
-| memory_get | 获取单个记忆 |
-| memory_update | 更新记忆 |
-| memory_delete | 删除记忆 |
-| memory_link | 创建链接 |
-| memory_stats | 获取统计 |
-| memory_consolidate | 整合记忆 |
+| memory_create | Create memory |
+| memory_retrieve | Search memory |
+| memory_get | Get a single memory |
+| memory_update | Update memory |
+| memory_delete | Delete memory |
+| memory_link | Create link |
+| memory_stats | Get statistics |
+| memory_consolidate | Consolidate memory |
 
-### 使用示例 (Claude)
+### Usage Example (Claude)
 
 ```json
 {
   "tool": "memory_create",
   "arguments": {
-    "content": "用户偏好使用中文交流",
+    "content": "User prefers communicating in Chinese",
     "pool": "implicit",
     "type": "preference"
   }
@@ -252,9 +252,9 @@ await client.link(sourceId, targetId, 'related')
 
 ---
 
-## 🔧 高级用法
+## 🔧 Advanced Usage
 
-### 渐进式检索
+### Progressive Retrieval
 
 ```rust
 use self_evolving_memory::memory::{InMemoryStore, SpreadingActivation};
@@ -263,11 +263,11 @@ use std::sync::Arc;
 let store = Arc::new(InMemoryStore::new());
 let spreader = SpreadingActivation::new(store.clone());
 
-// 从种子记忆开始扩散
+// Spread from seed memories
 let results = spreader.spread(&[seed_id]).await?;
 
-// 渐进式搜索
-let results = spreader.progressive_search("用户偏好", 5).await?;
+// Progressive search
+let results = spreader.progressive_search("User preference", 5).await?;
 ```
 
 ### Memory Consolidation
@@ -279,130 +279,130 @@ use std::sync::Arc;
 let store = Arc::new(InMemoryStore::new());
 let consolidator = MemoryConsolidator::new(store.clone());
 
-// 运行整合
+// Run consolidation
 let report = consolidator.consolidate().await?;
 println!("Decayed: {}, Removed: {}", report.decayed_count, report.removed_count);
 ```
 
-### Embedding 服务
+### Embedding Service
 
 ```rust
 use self_evolving_memory::memory::embedding::EmbeddingService;
 
-// 使用 OpenAI
+// Use OpenAI
 let service = EmbeddingService::openai("sk-xxx".to_string());
-let embedding = service.embed("这是一段文本").await?;
+let embedding = service.embed("This is a text snippet").await?;
 
-// 使用本地模拟
+// Use local mock
 let service = EmbeddingService::local(1536);
-let embedding = service.embed("这是一段文本").await?;
+let embedding = service.embed("This is a text snippet").await?;
 ```
 
 ---
 
-## 📊 数据模型
+## 📊 Data Model
 
 ### Memory
 
-| 字段 | 类型 | 说明 |
+| Field | Type | Description |
 |------|------|------|
-| id | UUID | 唯一标识 |
-| content | String | 记忆内容 |
+| id | UUID | Unique identifier |
+| content | String | Memory content |
 | pool | Enum | explicit/implicit |
-| type | Enum | 6种类型 |
-| confidence | f64 | 置信度 (0-1) |
-| importance | f64 | 重要度 (0-1) |
-| decay_rate | f64 | 衰减率 |
-| tags | Vec\<String\> | 标签 |
-| created_at | DateTime | 创建时间 |
-| access_count | u64 | 访问次数 |
+| type | Enum | 6 types |
+| confidence | f64 | Confidence (0-1) |
+| importance | f64 | Importance (0-1) |
+| decay_rate | f64 | Decay rate |
+| tags | Vec\<String\> | Tags |
+| created_at | DateTime | Creation time |
+| access_count | u64 | Access count |
 
 ### MemoryType
 
-- `fact` - 事实知识
-- `event` - 事件经历
-- `procedure` - 方法技能
-- `concept` - 概念理解
-- `preference` - 偏好习惯
-- `context` - 当前状态
+- `fact` - Factual knowledge
+- `event` - Event experience
+- `procedure` - Procedure/Skill
+- `concept` - Concept understanding
+- `preference` - Preference/Habit
+- `context` - Current state/Context
 
 ### LinkType
 
-- `related` - 相关
-- `causes` - 因果
-- `contradicts` - 矛盾
-- `specializes` - 特化
-- `derived_from` - 来源
-- `similar` - 相似
-- `follows` - 顺序
-- `alternative` - 替代
+- `related` - Related
+- `causes` - Causes
+- `contradicts` - Contradicts
+- `specializes` - Specializes
+- `derived_from` - Derived from
+- `similar` - Similar
+- `follows` - Follows
+- `alternative` - Alternative
 
 ---
 
-## 🎯 最佳实践
+## 🎯 Best Practices
 
-### 1. 记忆分类
+### 1. Memory Classification
 
 ```python
-# 明确的事实 → Explicit/Fact
-client.create({"content": "公司API地址是api.example.com", "pool": "explicit", "type": "fact"})
+# Explicit facts -> Explicit/Fact
+client.create({"content": "Company API address is api.example.com", "pool": "explicit", "type": "fact"})
 
-# 用户偏好 → Implicit/Preference
-client.create({"content": "用户喜欢简洁回复", "pool": "implicit", "type": "preference"})
+# User preferences -> Implicit/Preference
+client.create({"content": "User likes concise replies", "pool": "implicit", "type": "preference"})
 
-# 当前状态 → Explicit/Context
-client.create({"content": "当前在讨论项目需求", "pool": "explicit", "type": "context"})
+# Current context -> Explicit/Context
+client.create({"content": "Currently discussing project requirements", "pool": "explicit", "type": "context"})
 ```
 
-### 2. 链接建立
+### 2. Link Establishment
 
 ```python
-# 建立因果链
+# Establish causal chain
 client.link(cause_id, effect_id, "causes")
 
-# 建立相关链
+# Establish related chain
 client.link(related1_id, related2_id, "related")
 
-# 建立相似链
+# Establish similar chain
 client.link(similar1_id, similar2_id, "similar")
 ```
 
-### 3. 定期整理
+### 3. Regular Consolidation
 
 ```python
-# 每天运行一次 consolidation
+# Run consolidation once a day
 consolidator.consolidate()
 
-# 检查统计
+# Check statistics
 stats = client.stats()
 if stats['total_memories'] > 1000:
-    print("考虑清理旧记忆")
+    print("Consider cleaning up old memories")
 ```
 
 ---
 
-## ❓ 常见问题
+## ❓ FAQ
 
-### Q: 如何选择 pool?
-- **Explicit**: 用户明确告知的信息
-- **Implicit**: 系统观察推断的信息
+### Q: How to choose a pool?
+- **Explicit**: Information explicitly told by the user
+- **Implicit**: Information inferred from system observation
 
-### Q: 如何设置 importance?
-- 0.0-0.3: 低重要度
-- 0.4-0.7: 中等重要度
-- 0.8-1.0: 高重要度
+### Q: How to set importance?
+- 0.0-0.3: Low importance
+- 0.4-0.7: Medium importance
+- 0.8-1.0: High importance
 
-### Q: 记忆会自动删除吗?
-- 设置 `decay_rate` 后，记忆强度会随时间衰减
-- 当强度低于阈值时，`consolidate()` 会自动清理
+### Q: Will memories be deleted automatically?
+- After setting `decay_rate`, memory strength decays over time
+- When strength falls below the threshold, `consolidate()` cleans it up automatically
 
 ---
 
-## 📝 更新日志
+## 📝 Changelog
 
 ### v0.1.0 (2026-04-04)
-- ✅ Phase 1: 核心功能
-- ✅ Phase 2: 高级特性
-- ✅ 渐进式检索
+- ✅ Phase 1: Core features
+- ✅ Phase 2: Advanced features
+- ✅ Progressive Retrieval
 - ✅ Memory Consolidation
-- ✅ Embedding 支持
+- ✅ Embedding support

@@ -5,46 +5,46 @@
 ![1.png](docs/1.png)
 ![2.png](docs/2.png)
 
-🧠 A memory system designed for AI Agents, implementing human-like memory management mechanisms.
+🧠 一个为 AI Agent 设计的记忆系统，实现类似人类的记忆管理机制。
 
-## Features
+## 特性
 
-- **Dual-Pool Mechanism**: Explicit + Implicit Memory
-- **Six Types**: Fact, Event, Procedure, Concept, Preference, Context
-- **Memory Links**: 8 relation types (related, causes, similar...)
-- **Progressive Retrieval**: Spreading Activation Algorithm
-- **Memory Decay**: Simulating the human forgetting curve
-- **MCP Protocol**: 8 tools for AI Agent invocation
-- **Multi-language SDKs**: Python + TypeScript
-- **Web UI**: React management interface
-- **CLI**: Complete command-line tool
+- **双池机制**: Explicit (显性) + Implicit (隐性) 记忆
+- **六种类型**: Fact, Event, Procedure, Concept, Preference, Context
+- **记忆链接**: 8种关系类型 (related, causes, similar...)
+- **渐进式检索**: Spreading Activation 算法
+- **记忆衰减**: 模拟人类遗忘曲线
+- **MCP 协议**: 8个工具供 AI Agent 调用
+- **多语言 SDK**: Python + TypeScript
+- **Web UI**: React 管理界面
+- **CLI**: 完整命令行工具
 
-## Quick Start
+## 快速开始
 
 ```bash
-# Build
+# 构建
 cargo build --release
 
-# Start the server
+# 启动服务器
 ./target/debug/mem --serve
 
-# Create memory
-./target/debug/mem create "User likes concise replies" --pool implicit --type preference
+# 创建记忆
+./target/debug/mem create "用户喜欢简洁回复" --pool implicit --type preference
 
-# Search
-./target/debug/mem search "user preferences"
+# 搜索
+./target/debug/mem search "用户偏好"
 
-# Interactive mode
+# 交互模式
 ./target/debug/mem interactive
 ```
 
-## Documentation
+## 文档
 
-- [Usage Documentation](docs/USAGE.md)
-- [API Documentation](docs/API.md)
-- [Architecture Design](docs/ARCHITECTURE.md)
+- [使用文档](docs/USAGE.md)
+- [API 文档](docs/API.md)
+- [架构设计](docs/ARCHITECTURE.md)
 
-## Architecture
+## 架构
 
 ```
 ┌─────────────────────────────────────────┐
@@ -67,33 +67,33 @@ cargo build --release
 └─────────────────────────────────────────┘
 ```
 
-## Core Concepts
+## 核心概念
 
-### Dual-Pool Mechanism
+### 双池机制
 
-**Explicit Pool**
-- Conscious recall
-- Facts, events, procedures
-- Information explicitly told by the user
+**Explicit Pool (显性记忆)**
+- 有意识回忆
+- 事实、事件、方法
+- 用户明确告知的信息
 
-**Implicit Pool**
-- Unconscious influence
-- Preferences, habits, patterns
-- Information inferred from system observation
+**Implicit Pool (隐性记忆)**
+- 无意识影响
+- 偏好、习惯、模式
+- 系统观察推断的信息
 
-### Progressive Retrieval
+### 渐进式检索
 
 ```
-Search "user preferences"
+搜索"用户偏好"
     ↓
-Found 3 direct matches
+找到 3 条直接匹配
     ↓
-Spread along links
+顺着链接扩散
     ↓
-Found 8 related memories
+找到 8 条相关记忆
 ```
 
-## SDK Usage
+## SDK 使用
 
 ### Python
 
@@ -102,15 +102,15 @@ from self_evolving_memory import MemoryClient
 
 client = MemoryClient("http://localhost:3000")
 
-# Create
+# 创建
 memory = client.create({
-    "content": "User prefers communicating in Chinese",
+    "content": "用户偏好中文交流",
     "pool": "implicit",
     "type": "preference"
 })
 
-# Search
-results = client.search("user preferences")
+# 搜索
+results = client.search("用户偏好")
 ```
 
 ### TypeScript
@@ -121,22 +121,22 @@ import { MemoryClient } from 'self-evolving-memory'
 const client = new MemoryClient('http://localhost:3000')
 
 const memory = await client.create({
-  content: 'User prefers communicating in Chinese',
+  content: '用户偏好中文交流',
   pool: 'implicit',
   type: 'preference'
 })
 ```
 
-## Project Structure
+## 项目结构
 
 ```
 self-evolving-memory/
 ├── src/
-│   ├── main.rs           # CLI entry
-│   ├── memory/           # Core modules
-│   │   ├── types.rs      # Data types
-│   │   ├── store.rs      # Storage
-│   │   ├── spreading.rs  # Progressive retrieval
+│   ├── main.rs           # CLI 入口
+│   ├── memory/           # 核心模块
+│   │   ├── types.rs      # 数据类型
+│   │   ├── store.rs      # 存储
+│   │   ├── spreading.rs  # 渐进式检索
 │   │   ├── consolidation.rs
 │   │   └── embedding.rs
 │   ├── api/              # HTTP API
@@ -145,7 +145,7 @@ self-evolving-memory/
 │   ├── python/           # Python SDK
 │   └── typescript/       # TypeScript SDK
 ├── web-ui/               # React UI
-└── docs/                 # Documentation
+└── docs/                 # 文档
 ```
 
 ## License
