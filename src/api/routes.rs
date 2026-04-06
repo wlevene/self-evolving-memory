@@ -15,7 +15,7 @@ pub fn create_routes(state: Arc<AppState>) -> Router {
         .route("/health", get(health_check))
         .route("/memories", post(create_memory))
         .route("/memories", get(list_memories))
-        .route("/memories/search", post(search_memories))
+        .route("/memories/search", get(search_memories))
         .route("/memories/:id", get(get_memory))
         .route("/memories/:id", put(update_memory))
         .route("/memories/:id", delete(delete_memory))

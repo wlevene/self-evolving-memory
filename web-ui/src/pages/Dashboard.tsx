@@ -35,7 +35,7 @@ export function Dashboard() {
     queryKey: ['recent'],
     queryFn: async () => {
       const response = await api.get('/memories?limit=5')
-      return response.data?.results || []
+      return response.data.results
     },
   })
 

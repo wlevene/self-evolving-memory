@@ -49,12 +49,16 @@ pub async fn get_memory(
 pub async fn list_memories(
     State(state): State<Arc<AppState>>,
     Query(params): Query<ListParams>,
-) -> Result<Json<Vec<Memory>>, (StatusCode, String)> {
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
     let limit = params.limit.unwrap_or(100);
     let memories = state.store.list(params.pool, params.type_, limit).await
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e))?;
     
-    Ok(Json(memories))
+    let count = memories.len();
+    Ok(Json(serde_json::json!({
+        "results": memories,
+        "count": count
+    })))
 }
 
 #[derive(Debug, Deserialize)]
@@ -97,12 +101,18 @@ pub async fn delete_memory(
 /// Search memories handler
 pub async fn search_memories(
     State(state): State<Arc<AppState>>,
-    Json(query): Json<SearchQuery>,
-) -> Result<Json<Vec<Memory>>, (StatusCode, String)> {
+    Query(query): Query<SearchQuery>,
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    let q = query.query.clone();
     let memories = state.store.search(query).await
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e))?;
     
-    Ok(Json(memories))
+    let count = memories.len();
+    Ok(Json(serde_json::json!({
+        "results": memories,
+        "count": count,
+        "query": q
+    })))
 }
 
 /// Get stats handler
