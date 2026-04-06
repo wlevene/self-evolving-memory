@@ -11,11 +11,29 @@ cargo build --release
 
 ### Start the Server
 
+By default, the server runs with an **In-Memory** store (data will be lost upon restart). You can also configure it to use SQLite or PostgreSQL for persistence.
+
 ```bash
-# Method 1: Using CLI
+# Method 1: Using CLI (In-Memory)
 ./target/debug/mem --serve --port 3000
 
-# Method 2: Using cargo
+# Method 2: Using cargo (In-Memory)
+cargo run -- --serve --port 3000
+```
+
+#### Use SQLite for Local Persistence
+If you want to save data locally without setting up a database server, set the `DATABASE_URL` to a SQLite file path:
+
+```bash
+export DATABASE_URL="sqlite://memory.db?mode=rwc"
+cargo run -- --serve --port 3000
+```
+
+#### Use PostgreSQL for Production
+For production deployments and pgvector support, set `DATABASE_URL` to a PostgreSQL connection string:
+
+```bash
+export DATABASE_URL="postgres://postgres:postgres@localhost:5432/memory"
 cargo run -- --serve --port 3000
 ```
 

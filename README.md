@@ -9,6 +9,7 @@
 
 ## Features
 
+- **Multi-Storage Support**: In-Memory (default), SQLite (local persistence), and PostgreSQL (production)
 - **Dual-Pool Mechanism**: Explicit + Implicit Memory
 - **Six Types**: Fact, Event, Procedure, Concept, Preference, Context
 - **Memory Links**: 8 relation types (related, causes, similar...)
@@ -25,7 +26,11 @@
 # Build
 cargo build --release
 
-# Start the server
+# Start the server (In-Memory)
+./target/debug/mem --serve
+
+# Start the server with SQLite (local persistence)
+export DATABASE_URL="sqlite://memory.db?mode=rwc"
 ./target/debug/mem --serve
 
 # Create memory
